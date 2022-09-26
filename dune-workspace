@@ -1,7 +1,7 @@
 (lang dune 3.4)
 
 ; used only for merlin
-(context (default))
+;(context (default))
 
 (context
   (opam (switch 4.14.0+ios-device)

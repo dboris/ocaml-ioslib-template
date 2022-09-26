@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <string.h>
 
+#define CAML_NAME_SPACE
 #include <caml/mlvalues.h>
 #include <caml/callback.h>
 #include <caml/alloc.h>
@@ -29,4 +30,12 @@ format_result (int n)
 	if (closure == NULL) closure = caml_named_value("format_result");
 	/* copy the C string to the C heap so that it remains valid after GC */
 	return strdup(String_val(caml_callback(*closure, Val_int(n))));
+}
+
+void
+test_threads (int n)
+{
+	static const value * closure = NULL;
+	if (closure == NULL) closure = caml_named_value("test_threads");
+	caml_callback(*closure, Val_int(n));
 }

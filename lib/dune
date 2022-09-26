@@ -1,5 +1,12 @@
 (executable
  (name lib)
+ (libraries threads)
+ (flags
+  (:standard
+   ;-verbose
+   -noautolink
+   -cclib -lunix
+   -cclib -lthreadsnat))
  (foreign_stubs (language c) (names libwrap))
  (modes (native object)))
 
