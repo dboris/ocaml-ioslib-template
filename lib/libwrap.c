@@ -9,7 +9,7 @@
 #include "libwrap.h"
 
 void
-ini_lib (char** argv)
+init_lib (char** argv)
 {
 	caml_startup(argv);
 }

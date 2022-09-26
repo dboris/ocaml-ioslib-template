@@ -1,5 +1,9 @@
 (executable
  (name lib)
- ;(flags (:standard -verbose -noautolink))
  (foreign_stubs (language c) (names libwrap))
  (modes (native object)))
+
+(rule
+ (deps lib.exe.o)
+ (targets libcaml.a)
+ (action (run ar cq %{targets} %{deps})))
