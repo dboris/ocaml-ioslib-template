@@ -26,7 +26,7 @@ char *
 format_result (int n)
 {
 	static const value * closure = NULL;
-	if (closure == NULL) closure = caml_named_value("fib");
+	if (closure == NULL) closure = caml_named_value("format_result");
 	/* copy the C string to the C heap so that it remains valid after GC */
 	return strdup(String_val(caml_callback(*closure, Val_int(n))));
 }
