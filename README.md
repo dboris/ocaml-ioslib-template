@@ -1,0 +1,1 @@
+This repository contains a minimal example of an OCaml library for use in iOS projects based on [opam-cross-ios](https://github.com/dboris/opam-cross-ios).
