@@ -14,8 +14,7 @@ let test_threads n =
 	in
 	Thread.id t
 	|> Int.to_string
-	|> Cocoa.post_notification "CamlCreateThreadNotification";
-	Thread.join t
+	|> Cocoa.post_notification "CamlCreateThreadNotification"
 
 let application_did_finish_launching () =
 	Cocoa.add_notification_observer
