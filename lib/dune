@@ -14,7 +14,7 @@
     -framework Foundation
     -x objective-c
     -DCAML_NAME_SPACE))
-  (names libwrap objc_stubs))
+  (names libwrap cocoa_stubs))
  (modes (native object)))
 
 (rule

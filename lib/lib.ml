@@ -9,7 +9,7 @@ let test_threads n =
 	Thread.self ()
 	|> Thread.id
 	|> Int.to_string
-	|> Objc_api.post_notification "CamlCreateThreadNotification";
+	|> Cocoa.post_notification "CamlCreateThreadNotification";
 	Thread.join @@
 		Thread.create
 			(fun () ->
@@ -18,7 +18,7 @@ let test_threads n =
 			()
 
 let application_did_finish_launching () =
-	Objc_api.add_notification_observer
+	Cocoa.add_notification_observer
 		"UIDeviceOrientationDidChangeNotification"
 		(fun () ->
 			Printf.eprintf "Received UIDeviceOrientationDidChangeNotification\n%!")
