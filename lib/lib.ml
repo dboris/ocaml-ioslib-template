@@ -13,7 +13,16 @@ let test_threads n =
 				Printf.eprintf "Message from thread: %s\n%!" result)
 			()
 
+let application_did_finish_launching () =
+	Objc_api.add_notification_observer
+		"UIDeviceOrientationDidChangeNotification"
+		(fun () ->
+			Printf.eprintf "Received UIDeviceOrientationDidChangeNotification\n%!")
+
 let () =
 	Callback.register "fib" fib;
 	Callback.register "format_result" format_result;
-	Callback.register "test_threads" test_threads
+	Callback.register "test_threads" test_threads;
+	Callback.register
+		"application_did_finish_launching"
+		application_did_finish_launching

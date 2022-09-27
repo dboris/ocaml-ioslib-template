@@ -2,7 +2,6 @@
 #include <stdio.h>
 #include <string.h>
 
-#define CAML_NAME_SPACE
 #include <caml/mlvalues.h>
 #include <caml/callback.h>
 #include <caml/alloc.h>
@@ -13,6 +12,15 @@ void
 init_lib (char** argv)
 {
 	caml_startup(argv);
+}
+
+void
+application_did_finish_launching (void)
+{
+	static const value * closure = NULL;
+	if (closure == NULL) closure =
+		caml_named_value("application_did_finish_launching");
+	caml_callback(*closure, Val_unit);
 }
 
 int
