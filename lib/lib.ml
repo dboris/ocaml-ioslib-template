@@ -19,10 +19,12 @@ let application_did_finish_launching () =
 		(fun () ->
 			Printf.eprintf "Received UIDeviceOrientationDidChangeNotification\n%!")
 
-let () =
+let register_callbacks () =
 	Callback.register "fib" fib;
 	Callback.register "format_result" format_result;
 	Callback.register "test_threads" test_threads;
 	Callback.register
 		"application_did_finish_launching"
 		application_did_finish_launching
+
+let () = register_callbacks ()

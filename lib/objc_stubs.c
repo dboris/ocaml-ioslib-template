@@ -6,9 +6,9 @@
 
 
 CAMLprim void
-caml_add_notification_observer (value notification_name, value callback_f)
+caml_add_notification_observer (value notification_name, value observer_f)
 {
-	CAMLparam2(notification_name, callback_f);
+	CAMLparam2(notification_name, observer_f);
 	NSString * name = [NSString
 		stringWithUTF8String:String_val(notification_name)];
 	[[NSNotificationCenter defaultCenter]
@@ -16,6 +16,6 @@ caml_add_notification_observer (value notification_name, value callback_f)
 		object:nil
 		queue:[NSOperationQueue mainQueue]
 		usingBlock:^(NSNotification * _note) {
-			caml_callback(callback_f, Val_unit);
+			caml_callback(observer_f, Val_unit);
 		}];
 }
