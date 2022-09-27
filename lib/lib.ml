@@ -6,6 +6,10 @@ let format_result n =
 	Printf.sprintf "Result is: %d\n" n
 
 let test_threads n =
+	Thread.self ()
+	|> Thread.id
+	|> Int.to_string
+	|> Objc_api.post_notification "CamlCreateThreadNotification";
 	Thread.join @@
 		Thread.create
 			(fun () ->
