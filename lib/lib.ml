@@ -6,16 +6,16 @@ let format_result n =
 	Printf.sprintf "Result is: %d\n" n
 
 let test_threads n =
-	Thread.self ()
-	|> Thread.id
+	let t = Thread.create
+		(fun () ->
+			let result = format_result (fib n) in
+			Printf.eprintf "Message from thread: %s\n%!" result)
+		()
+	in
+	Thread.id t
 	|> Int.to_string
 	|> Cocoa.post_notification "CamlCreateThreadNotification";
-	Thread.join @@
-		Thread.create
-			(fun () ->
-				let result = format_result (fib n) in
-				Printf.eprintf "Message from thread: %s\n%!" result)
-			()
+	Thread.join t
 
 let application_did_finish_launching () =
 	Cocoa.add_notification_observer
