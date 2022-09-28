@@ -1,12 +1,14 @@
 (lang dune 3.4)
 
 (context
-  (opam (switch 4.14.0+ios-device)
+  (opam
+    (switch 4.14.0+ios-device)
     (targets ios)
     (disable_dynamically_linked_foreign_archives true)))
 
 (context
-  (opam (switch 4.14.0+ios-simulator)
+  (opam
+    (switch 4.14.0+ios-simulator)
     (targets ios)
     (merlin)
     (disable_dynamically_linked_foreign_archives true)))

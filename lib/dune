@@ -7,7 +7,18 @@
    -noautolink
    -cclib -lunix
    -cclib -lthreadsnat))
- (foreign_stubs (language c) (names libwrap))
+ (foreign_stubs
+  (language c)
+  (flags (:standard -DCAML_NAME_SPACE))
+  (names libwrap))
+ (foreign_stubs
+  (language c)
+  (flags
+   (:standard
+    ;-framework Foundation
+    -x objective-c
+    -DCAML_NAME_SPACE))
+  (names cocoa_stubs))
  (modes (native object)))
 
 (rule
