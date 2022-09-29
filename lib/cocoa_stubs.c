@@ -6,35 +6,37 @@
 
 
 CAMLprim void
-caml_add_notification_observer (value notification_name, value observer_f)
+caml_add_notification_observer (value val_note_name, value val_observer_f)
 {
-	CAMLparam2(notification_name, observer_f);
+	CAMLparam2(val_note_name, val_observer_f);
 
-	NSString * name =
-		[NSString stringWithUTF8String:String_val(notification_name)];
+	NSString * notification_name =
+		[NSString stringWithUTF8String:String_val(val_note_name)];
 
 	[[NSNotificationCenter defaultCenter]
-		addObserverForName:name
+		addObserverForName:notification_name
 		object:nil
 		queue:[NSOperationQueue mainQueue]
 		usingBlock:^(NSNotification * _note) {
-			caml_callback(observer_f, Val_unit);
+			caml_callback(val_observer_f, Val_unit);
 		}];
 }
 
 CAMLprim void
-caml_post_notification (value notification_name, value serialized_arg)
+caml_post_notification (value val_note_name, value val_serialized_arg)
 {
-	CAMLparam2(notification_name, serialized_arg);
+	CAMLparam2(val_note_name, val_serialized_arg);
 
-	NSString * name =
-		[NSString stringWithUTF8String:String_val(notification_name)];
+	NSString * notification_name =
+		[NSString stringWithUTF8String:String_val(val_note_name)];
 
 	NSDictionary * user_info =
-		@{ @"arg": [NSString stringWithUTF8String:String_val(serialized_arg)] };
+		@{
+			@"arg": [NSString stringWithUTF8String:String_val(val_serialized_arg)]
+		};
 
 	[[NSNotificationCenter defaultCenter]
-		postNotificationName:name
+		postNotificationName:notification_name
 		object:nil
 		userInfo:user_info];
 }
