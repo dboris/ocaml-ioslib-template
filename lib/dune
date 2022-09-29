@@ -1,10 +1,17 @@
 (executable
  (name lib)
- (libraries threads)
+ (enabled_if
+  (or
+   (= %{context_name} "device.ios")
+   (= %{context_name} "simulator.ios")))
+ (libraries threads sqlite3)
  (flags
   (:standard
    ;-verbose
    -noautolink
+   -cclib -lsqlite3_stubs
+   -cclib -L%{env:OPAM_SWITCH_PREFIX=/opt/local/lib}/ios-deps/sqlite3/lib
+   -cclib -lsqlite3
    -cclib -lunix
    -cclib -lthreadsnat))
  (foreign_stubs
@@ -22,6 +29,10 @@
  (modes (native object)))
 
 (rule
+ (enabled_if
+  (or
+   (= %{context_name} "device.ios")
+   (= %{context_name} "simulator.ios")))
  (deps lib.exe.o)
  (targets libcaml.a)
  (action (run ar cq %{targets} %{deps})))

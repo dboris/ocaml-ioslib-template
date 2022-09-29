@@ -17,6 +17,8 @@ let test_threads n =
 	|> Cocoa.post_notification "CamlCreateThreadNotification"
 
 let application_did_finish_launching () =
+	Sqlite3.sqlite_version_info ()
+	|> Printf.eprintf "Sqlite3 ver: %s\n%!";
 	Cocoa.add_notification_observer
 		"UIDeviceOrientationDidChangeNotification"
 		(fun () ->

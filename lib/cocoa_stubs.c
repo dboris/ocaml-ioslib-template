@@ -17,7 +17,9 @@ caml_add_notification_observer (value val_note_name, value val_observer_f)
 		addObserverForName:notification_name
 		object:nil
 		queue:[NSOperationQueue mainQueue]
-		usingBlock:^(NSNotification * _note) {
+		usingBlock:^(NSNotification * note) {
+			NSDictionary * user_info = note.userInfo;
+			/* TODO: pass user_info to caml -- retain? */
 			caml_callback(val_observer_f, Val_unit);
 		}];
 }
