@@ -12,3 +12,10 @@
     (targets ios)
     (merlin)
     (disable_dynamically_linked_foreign_archives true)))
+
+(env
+  (dev
+    (flags (:standard -principal))
+    (c_flags (:standard -Wall -pedantic -Wextra -Wunused)))
+  (release
+    (ocamlopt_flags (:standard -O3))))
