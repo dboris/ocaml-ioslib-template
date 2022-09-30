@@ -17,12 +17,11 @@ let test_threads n =
 	|> Cocoa.post_notification "CamlCreateThreadNotification"
 
 let test_sqlite () =
-	Sqlite3.sqlite_version_info ()
-	|> Printf.eprintf "Sqlite3 ver: %s\n%!";
 	let db = Sqlite3.db_open ~memory:true ""
 	and cb row =
 		Printf.eprintf "Sqlite3 row fetched: %s\n%!" row.(0)
 	in
+	Printf.eprintf "Sqlite3 ver: %s\n" @@ Sqlite3.sqlite_version_info ();
 	Sqlite3.exec_not_null_no_headers db ~cb {|
 		create table if not exists test (x text);
 		insert into test (x) values ("Hola"), ("Mundo");
@@ -32,8 +31,7 @@ let test_sqlite () =
 let application_did_finish_launching () =
 	Cocoa.add_notification_observer
 		"CamlSomeNotification"
-		(fun arg ->
-			Printf.eprintf "Received CamlSomeNotification with arg: (%s)\n%!" arg);
+		(Printf.eprintf "Received CamlSomeNotification with arg: (%s)\n%!");
 	test_sqlite ()
 
 let register_callbacks () =
