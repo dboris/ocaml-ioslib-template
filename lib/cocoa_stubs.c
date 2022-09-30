@@ -5,10 +5,10 @@
 #include <caml/callback.h>
 
 
-CAMLprim void
+CAMLprim value
 caml_add_notification_observer (value val_note_name, value val_observer_f)
 {
-	CAMLparam2(val_note_name, val_observer_f);
+	CAMLparam2 (val_note_name, val_observer_f);
 
 	NSString * notification_name =
 		[NSString stringWithUTF8String:String_val(val_note_name)];
@@ -22,12 +22,14 @@ caml_add_notification_observer (value val_note_name, value val_observer_f)
 			/* TODO: pass user_info to caml -- retain? */
 			caml_callback(val_observer_f, Val_unit);
 		}];
+
+	CAMLreturn (Val_unit);
 }
 
-CAMLprim void
+CAMLprim value
 caml_post_notification (value val_note_name, value val_serialized_arg)
 {
-	CAMLparam2(val_note_name, val_serialized_arg);
+	CAMLparam2 (val_note_name, val_serialized_arg);
 
 	NSString * notification_name =
 		[NSString stringWithUTF8String:String_val(val_note_name)];
@@ -41,4 +43,6 @@ caml_post_notification (value val_note_name, value val_serialized_arg)
 		postNotificationName:notification_name
 		object:nil
 		userInfo:user_info];
+
+	CAMLreturn (Val_unit);
 }
