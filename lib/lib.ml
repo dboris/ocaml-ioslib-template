@@ -31,9 +31,9 @@ let test_sqlite () =
 
 let application_did_finish_launching () =
 	Cocoa.add_notification_observer
-		"UIDeviceOrientationDidChangeNotification"
-		(fun () ->
-			Printf.eprintf "Received UIDeviceOrientationDidChangeNotification\n%!");
+		"CamlSomeNotification"
+		(fun arg ->
+			Printf.eprintf "Received CamlSomeNotification with arg: (%s)\n%!" arg);
 	test_sqlite ()
 
 let register_callbacks () =

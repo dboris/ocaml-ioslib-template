@@ -3,6 +3,7 @@
 #include <caml/mlvalues.h>
 #include <caml/memory.h>
 #include <caml/callback.h>
+#include <caml/alloc.h>
 
 
 CAMLprim value
@@ -19,8 +20,11 @@ caml_add_notification_observer (value val_note_name, value val_observer_f)
 		queue:[NSOperationQueue mainQueue]
 		usingBlock:^(NSNotification * note) {
 			NSDictionary * user_info = note.userInfo;
-			/* TODO: pass user_info to caml -- retain? */
-			caml_callback(val_observer_f, Val_unit);
+			NSString * arg = [user_info valueForKey:@"caml_arg"];
+			caml_callback(
+				val_observer_f,
+				caml_copy_string(arg == nil ? "" : arg.UTF8String)
+			);
 		}];
 
 	CAMLreturn (Val_unit);
