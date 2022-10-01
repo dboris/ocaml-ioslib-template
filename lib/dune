@@ -5,7 +5,10 @@
    (= %{context_name} "device.ios")
    (= %{context_name} "simulator")
    (= %{context_name} "simulator.ios")))
- (libraries threads sqlite3)
+ (libraries
+  threads
+  unix
+  sqlite3)
  (flags
   (:standard
   ;  -verbose

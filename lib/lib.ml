@@ -26,13 +26,15 @@ let test_sqlite () =
 		create table if not exists test (x text);
 		insert into test (x) values ("Hola"), ("Mundo");
 		select x from test;
-	|}
+	|} |> ignore
 
 let application_did_finish_launching () =
 	Cocoa.add_notification_observer
 		"CamlSomeNotification"
 		(Printf.eprintf "Received CamlSomeNotification with arg: (%s)\n%!");
-	test_sqlite ()
+	test_sqlite ();
+	let db = Storage.init "app_db.sqlite" in
+	Storage.test db
 
 let register_callbacks () =
 	Callback.register "fib" fib;
