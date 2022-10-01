@@ -16,11 +16,25 @@ let test_threads n =
 	|> Int.to_string
 	|> Cocoa.post_notification "CamlCreateThreadNotification"
 
+let test_sqlite () =
+	let db = Sqlite3.db_open ~memory:true ""
+	and cb row =
+		Printf.eprintf "Sqlite3 row fetched: %s\n%!" row.(0)
+	in
+	Printf.eprintf "Sqlite3 ver: %s\n" @@ Sqlite3.sqlite_version_info ();
+	Sqlite3.exec_not_null_no_headers db ~cb {|
+		create table if not exists test (x text);
+		insert into test (x) values ("Hola"), ("Mundo");
+		select x from test;
+	|} |> ignore
+
 let application_did_finish_launching () =
 	Cocoa.add_notification_observer
-		"UIDeviceOrientationDidChangeNotification"
-		(fun () ->
-			Printf.eprintf "Received UIDeviceOrientationDidChangeNotification\n%!")
+		"CamlSomeNotification"
+		(Printf.eprintf "Received CamlSomeNotification with arg: (%s)\n%!");
+	test_sqlite ();
+	let db = Storage.init "app_db.sqlite" in
+	Storage.test db
 
 let register_callbacks () =
 	Callback.register "fib" fib;
