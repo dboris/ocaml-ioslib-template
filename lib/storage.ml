@@ -5,10 +5,10 @@ let file_exists filename =
 	with Unix.Unix_error (Unix.ENOENT, _, _) -> false
 
 let create_schema db =
-	Sqlite3.exec db {|
+	Sqlite3.exec db {sql|
 		create table count (n int);
 		insert into count (n) values (0);
-	|} |> ignore
+	|sql} |> ignore
 
 let init db_filename =
 	let filename =
@@ -23,7 +23,9 @@ let test db =
 	let cb row =
 		Printf.eprintf "Sqlite3 count: n=%s\n%!" row.(0)
 	in
-	Printf.eprintf "Sqlite3 ver: %s\n" @@ Sqlite3.sqlite_version_info ();
-	Sqlite3.exec_not_null_no_headers db ~cb {|
+	Sqlite3.exec_not_null_no_headers db ~cb {sql|
 		select n from count;
-	|} |> ignore
+	|sql} |> ignore;
+	Sqlite3.exec db {sql|
+		update count set n = n + 1;
+	|sql} |> ignore
