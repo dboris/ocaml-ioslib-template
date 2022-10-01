@@ -8,7 +8,9 @@
  (libraries
   threads
   unix
-  sqlite3)
+  sqlite3
+  ; base
+  sexplib)
  (flags
   (:standard
   ;  -verbose
@@ -30,7 +32,8 @@
     -x objective-c
     -DCAML_NAME_SPACE))
   (names cocoa_stubs))
- (modes (native object)))
+ (modes (native object))
+ (preprocess (pps ppx_sexp_conv)))
 
 (rule
  (enabled_if
