@@ -6,16 +6,23 @@
    (= %{context_name} "simulator")
    (= %{context_name} "simulator.ios")))
  (libraries
-  threads
-  unix
+  logs
+  logs.lwt
+  logs.threaded
+  lwt
+  lwt.unix
+  sexplib
   sqlite3
-  ; base
-  sexplib)
+  threads
+  unix)
  (flags
   (:standard
   ;  -verbose
    -noautolink
    -cclib -lsqlite3_stubs
+   -cclib -llwt_unix_stubs
+   -cclib -L%{env:OPAM_SWITCH_PREFIX=/opt/local/lib}/ios-deps/libev/lib
+   -cclib -lev
   ;  -cclib -L%{env:OPAM_SWITCH_PREFIX=/opt/local/lib}/ios-deps/sqlite3/lib
   ;  -cclib -lsqlite3
    -cclib -lunix
@@ -28,7 +35,6 @@
   (language c)
   (flags
    (:standard
-    ;-framework Foundation
     -x objective-c
     -DCAML_NAME_SPACE))
   (names cocoa_stubs))

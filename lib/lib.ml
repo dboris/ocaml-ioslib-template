@@ -3,8 +3,6 @@ open Sexplib.Std
 
 module Sexp = Sexplib.Sexp
 
-let eprintf = Stdlib.Printf.eprintf
-
 type t = { foo: int; bar: float } [@@deriving sexp]
 
 let rec fib n =
@@ -18,7 +16,7 @@ let test_threads n =
 	let t = Thread.create
 		(fun () ->
 			let result = format_result (fib n) in
-			eprintf "Message from thread: %s\n%!" result)
+			Logs.debug (fun m -> m "Message from thread: %s" result))
 		()
 	in
 	Thread.id t
@@ -28,9 +26,9 @@ let test_threads n =
 let test_sqlite () =
 	let db = Sqlite3.db_open ~memory:true ""
 	and cb row =
-		eprintf "Sqlite3 row fetched: %s\n%!" row.(0)
+		Logs.debug (fun m -> m "Sqlite3 row fetched: %s" row.(0))
 	in
-	eprintf "Sqlite3 ver: %s\n" @@ Sqlite3.sqlite_version_info ();
+	Logs.debug (fun m -> m "Sqlite3 ver: %s\n" @@ Sqlite3.sqlite_version_info ());
 	Sqlite3.exec_not_null_no_headers db ~cb {|
 		create table if not exists test (x text);
 		insert into test (x) values ("Hola"), ("Mundo");
@@ -38,15 +36,23 @@ let test_sqlite () =
 	|} |> ignore
 
 let application_did_finish_launching () =
+	Logs.info (fun m -> m "application_did_finish_launching called");
 	Cocoa.add_notification_observer
 		"CamlSomeNotification"
-		(eprintf "Received CamlSomeNotification with arg: (%s)\n%!");
+		(fun msg -> Logs.debug
+			(fun m -> m "Received CamlSomeNotification with arg: (%s)" msg));
+
 	test_sqlite ();
 	let db = Storage.init "app_db.sqlite" in
 	Storage.test db;
+
 	sexp_of_t {foo = 42; bar = 3.14}
 	|> Sexp.to_string
-	|> eprintf "Sexp: %s\n%!"
+	|> (fun s -> Logs.debug (fun m -> m "Sexp: %s" s));
+
+	Thread.self ()
+	|> Thread.id
+	|> (fun s -> Logs.debug (fun m -> m "Main thread id: %d" s))
 
 let register_callbacks () =
 	Callback.register "fib" fib;
@@ -56,4 +62,8 @@ let register_callbacks () =
 		"application_did_finish_launching"
 		application_did_finish_launching
 
-let () = register_callbacks ()
+let () =
+	register_callbacks ();
+	Logs.set_reporter (Logs.format_reporter ());
+	Logs.set_level (Some Logs.Info);
+	Logs_threaded.enable ()
